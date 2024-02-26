@@ -12,6 +12,7 @@ let preProduced_energy = 0;
 
 const converters = {
     seMetering: {
+
         cluster: 'seMetering',
         type: ['attributeReport', 'readResponse'],
         options: (definition) => {
@@ -20,6 +21,7 @@ const converters = {
                 result.push(exposes.options.precision('produced_energy'), exposes.options.calibration('energy', 'percentual'));
             }
             return result;
+
         },
 
         convert: (model, msg, publish, options, meta) => {
@@ -86,10 +88,10 @@ const converters = {
                 {key: 'reactivePowerPhB', name: 'power_reactive_phase_b', factor: 'acPower'},
                 {key: 'reactivePowerPhC', name: 'power_reactive_phase_c', factor: 'acPower'},
                 {key: 'totalReactivePower', name: 'power_reactive', factor: 'acPower'},
-                {key: 'rmsCurrent', name: 'current_phase_a', factor: 'acCurrent'},
+                {key: 'rmsCurrent', name: 'current', factor: 'acCurrent'},
                 {key: 'rmsCurrentPhB', name: 'current_phase_b', factor: 'acCurrent'},
                 {key: 'rmsCurrentPhC', name: 'current_phase_c', factor: 'acCurrent'},
-                {key: 'rmsVoltage', name: 'voltage_phase_a', factor: 'acVoltage'},
+                {key: 'rmsVoltage', name: 'voltage', factor: 'acVoltage'},
                 {key: 'rmsVoltagePhB', name: 'voltage_phase_b', factor: 'acVoltage'},
                 {key: 'rmsVoltagePhC', name: 'voltage_phase_c', factor: 'acVoltage'},
                 {key: 'acFrequency', name: 'ac_frequency', factor: 'acFrequency'},
@@ -112,7 +114,7 @@ const converters = {
             }
 
             if (msg.data.hasOwnProperty('powerFactor')) {
-                payload.power_factor_phase_a = precisionRound(msg.data['powerFactor'] / 100 , 2);
+                payload.power_factor = precisionRound(msg.data['powerFactor'] / 100 , 2);
             }
             if (msg.data.hasOwnProperty('powerFactorPhB')) {
                 payload.power_factor_phase_b = precisionRound(msg.data['powerFactorPhB'] / 100 , 2);
@@ -147,16 +149,16 @@ const definition = {
         e.numeric('power_phase_a', ea.STATE).withUnit('W').withDescription('Instantaneous measured power on phase A'),
         e.numeric('power_phase_b', ea.STATE).withUnit('W').withDescription('Instantaneous measured power on phase B'),
         e.numeric('power_phase_c', ea.STATE).withUnit('W').withDescription('Instantaneous measured power on phase C'),
-        e.numeric('voltage_phase_a', ea.STATE).withUnit('V').withDescription('Measured electrical potential value on phase A'),
-        e.numeric('voltage_phase_b', ea.STATE).withUnit('V').withDescription('Measured electrical potential value on phase B'),
-        e.numeric('voltage_phase_c', ea.STATE).withUnit('V').withDescription('Measured electrical potential value on phase C'),
+        e.numeric('voltage', ea.STATE).withLabel('Voltage phase A').withUnit('V').withDescription('Measured electrical potential value on phase A'),
+        e.numeric('voltage_phase_b', ea.STATE).withLabel('Voltage phase B').withUnit('V').withDescription('Measured electrical potential value on phase B'),
+        e.numeric('voltage_phase_c', ea.STATE).withLabel('Voltage phase C').withUnit('V').withDescription('Measured electrical potential value on phase C'),
         e.ac_frequency(),
-        e.numeric('current_phase_a', ea.STATE).withUnit('A').withDescription('Instantaneous measured electrical current on phase A'),
-        e.numeric('current_phase_b', ea.STATE).withUnit('A').withDescription('Instantaneous measured electrical current on phase B'),
-        e.numeric('current_phase_c', ea.STATE).withUnit('A').withDescription('Instantaneous measured electrical current on phase C'),
-        e.numeric('power_factor_phase_a', ea.STATE).withDescription('Instantaneous measured power factor on phase A'),
-        e.numeric('power_factor_phase_b', ea.STATE).withDescription('Instantaneous measured power factor on phase B'),
-        e.numeric('power_factor_phase_c', ea.STATE).withDescription('Instantaneous measured power factor on phase C'),
+        e.numeric('current', ea.STATE).withLabel('Current phase A').withUnit('A').withDescription('Instantaneous measured electrical current on phase A'),
+        e.numeric('current_phase_b', ea.STATE).withLabel('Current phase B').withUnit('A').withDescription('Instantaneous measured electrical current on phase B'),
+        e.numeric('current_phase_c', ea.STATE).withLabel('Current phase C').withUnit('A').withDescription('Instantaneous measured electrical current on phase C'),
+        e.numeric('power_factor', ea.STATE).withUnit('pf').withDescription('Instantaneous measured power factor on phase A'),
+        e.numeric('power_factor_phase_b', ea.STATE).withUnit('pf').withDescription('Instantaneous measured power factor on phase B'),
+        e.numeric('power_factor_phase_c', ea.STATE).withUnit('pf').withDescription('Instantaneous measured power factor on phase C'),
 
         e.power_reactive(),
         e.numeric('power_reactive_phase_a', ea.STATE).withUnit('VAR').withDescription('Instantaneous measured reactive power on phase A'),
